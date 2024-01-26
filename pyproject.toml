@@ -1,0 +1,100 @@
+[tool.poetry]
+name = "demo-project"
+version = "0.1.0"
+description = "Apartment rentals backend API"
+authors = ["Biagio Distefano <biagiodistefano92@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^5.0.1"
+django-ninja = "^1.1.0"
+django-ninja-jwt = "^5.3.0"
+django-ninja-extra = "^0.20.3"
+python-decouple = "^3.8"
+django-cors-headers = "^4.3.1"
+whitenoise = "^6.6.0"
+pillow = "^10.2.0"
+pydantic = {extras = ["email"], version = "^2.5.3"}
+faker = "^22.2.0"
+gunicorn = "^21.2.0"
+psycopg = {extras = ["binary"], version = "^3.1.17"}
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.13"
+mypy = "^1.8.0"
+pytest = "^7.4.4"
+pytest-cov = "^4.1.0"
+pytest-django = "^4.7.0"
+pre-commit = "^3.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "apartmentrentals.settings"
+
+[tool.coverage.run]
+omit = [
+    "src/manage.py",
+    "src/apartmentrentals/asgi.py",
+    "src/apartmentrentals/wsgi.py",
+    "src/apartmentrentals/settings/*",
+    "src/tests/*",
+    "src/api/management/*",
+    "src/api/migrations/*",
+]
+
+[tool.coverage.html]
+# skip_covered = true
+skip_empty = true
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F", "I", "W"]
+ignore = ["I001"]
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "playground.py",
+    "*/migrations/*"
+]
+
+# Same as Black.
+line-length = 120
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.11.
+target-version = "py311"
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10

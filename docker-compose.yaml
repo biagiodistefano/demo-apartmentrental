@@ -1,0 +1,55 @@
+services:
+
+  postgres:
+    image: 'postgres:15.2-alpine3.17'
+    command: postgres -c max_connections=270
+    environment:
+      SECRET_KEY: $SECRET_KEY
+      POSTGRES_USER: $DB_USER
+      PGUSER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_PORT: $DB_PORT
+      POSTGRES_DB: $DB_NAME
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "$DB_PORT:$DB_PORT"
+
+  django:
+    restart: "no"
+    build: "."
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SECRET_KEY: $SECRET_KEY
+      DEBUG: $DEBUG
+      MEDIA_ROOT: "/apartmentrentals/src/media"
+      PAGINATION_PAGE_SIZE: $PAGINATION_PAGE_SIZE
+      HTTP_X_FORWARDED_PROTO: $HTTP_X_FORWARDED_PROTO
+      ADMIN_URL: $ADMIN_URL
+      DB_NAME: $DB_NAME
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_HOST: $DB_HOST
+      DB_PORT: $DB_PORT
+    volumes:
+      - media:/apartmentrentals/src/media
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command:
+      - /bin/bash
+      - -c
+      - |
+        python manage.py bootstrap
+        python -m gunicorn apartmentrentals.wsgi:application --bind 0.0.0.0:8000
+
+volumes:
+  postgres_data:
+  media:
