@@ -53,7 +53,7 @@ source .venv/bin/activate
 Finally, install the dependencies:
 
 ```bash
-poet install  --no-root
+poetry install  --no-root
 ```
 
 ### Bootstrapping the database
